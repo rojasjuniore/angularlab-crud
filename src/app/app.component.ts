@@ -34,10 +34,10 @@ export class AppComponent {
       photo: ''
     }
     this.itemsRef = db.list('users');
-    // Use snapshotChanges().map() to store the key
     this.items = this.itemsRef.snapshotChanges().map(changes => {
       return changes.map(c => ({ key: c.payload.key, ...c.payload.val() }));
     });
+    this.petition();
 
   }
 
@@ -51,18 +51,16 @@ export class AppComponent {
       }, err => console.log(err));
   }
 
-  addItem(newName: string) {
-    this.itemsRef.push({ text: newName });
-  }
+
   updateItem(key: string, newText: string) {
+
     const user_ = {
-      img: this.user.img,
+      img: this.user.img || 'https://www.tuexperto.com/wp-content/uploads/2015/07/perfil_01.jpg',
       name: this.user.name,
       email: this.user.email,
-      tlf: this.user.tlf,
-      key_: this.user.key
+      tlf: this.user.tlf
     }
-    this.itemsRef.update(user_.key_, user_);
+    this.itemsRef.update(key, user_);
   }
   deleteItem(key: string) {
     this.itemsRef.remove(key);
@@ -70,9 +68,10 @@ export class AppComponent {
   deleteEverything() {
     this.itemsRef.remove();
   }
+
   onSubmit(f: NgForm) {
     const user_ = {
-      img: this.user.img,
+      img: this.user.img || 'https://www.tuexperto.com/wp-content/uploads/2015/07/perfil_01.jpg',
       name: this.user.name,
       email: this.user.email,
       tlf: this.user.tlf
